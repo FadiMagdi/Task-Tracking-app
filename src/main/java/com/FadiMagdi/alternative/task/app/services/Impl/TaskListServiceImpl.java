@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TaskListServiceImpl implements TaskListService {
@@ -57,5 +60,39 @@ public class TaskListServiceImpl implements TaskListService {
 
 
                 ));
+    }
+
+    @Override
+    public Optional<TaskList> getTaskListById(UUID id) {
+        return this.taskListRepository.findById(id);
+    }
+
+    @Override
+    public TaskList updateTaskList(UUID TaskListID, TaskList taskList) {
+
+        if(taskList.getId() == null){
+            throw new IllegalArgumentException("task list must have an id");
+        }
+
+        if(!Objects.equals(taskList.getId(),TaskListID)){
+            throw new IllegalArgumentException("changing task list id is not permitted");
+        }
+
+TaskList existingTaskList=        this.taskListRepository.findById(TaskListID).orElseThrow(()-> new IllegalArgumentException("task list not found"));
+
+
+        existingTaskList.setTitle(taskList.getTitle());
+existingTaskList.setDescription(taskList.getDescription());
+
+       existingTaskList.setUpdated(LocalDateTime.now());
+
+       return this.taskListRepository.save(existingTaskList);
+
+    }
+
+    @Override
+    public void deleteTaskList(UUID TaskListId) {
+this.taskListRepository.deleteById(TaskListId);
+// no need to handle non existent entities as it is already handled by the delete method
     }
 }
