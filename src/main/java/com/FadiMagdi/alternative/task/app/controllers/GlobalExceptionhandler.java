@@ -1,5 +1,6 @@
 package com.FadiMagdi.alternative.task.app.controllers;
 
+import com.FadiMagdi.alternative.task.app.domain.dto.ErrorResponseClass;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,10 +14,10 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class GlobalExceptionhandler {
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-public ResponseEntity<ErrorResponse> handleIllegalExceptions(RuntimeException ex,
+public ResponseEntity<ErrorResponseClass> handleIllegalExceptions(RuntimeException ex,
             WebRequest request) {
 
-ErrorResponse errorResponse = new ErrorResponse(
+ErrorResponseClass errorResponse = new ErrorResponseClass(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
                 request.getDescription(false)
